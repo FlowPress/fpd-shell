@@ -8,7 +8,8 @@ set_oh_my_zsh_theme_and_plugins() {
 	echo "4) avit"
 	echo "5) random"
 	echo "6) Custom theme"
-	read -p "Enter the number corresponding to your choice or type your theme name: " theme_choice
+
+	read theme_choice?"Enter the number corresponding to your choice or type your theme name: "
 
 	case $theme_choice in
 	1)
@@ -27,7 +28,7 @@ set_oh_my_zsh_theme_and_plugins() {
 		theme="random"
 		;;
 	6)
-		read -p "Enter your custom theme name: " custom_theme
+		read custom_theme?"Enter your custom theme name: "
 		theme="$custom_theme"
 		;;
 	*)
@@ -36,11 +37,10 @@ set_oh_my_zsh_theme_and_plugins() {
 		;;
 	esac
 
-	 # Create .zshrc if it doesn't exist
-    if [ ! -f ~/.zshrc ]; then
-        touch ~/.zshrc
-    fi
-
+	# Create .zshrc if it doesn't exist
+	if [ ! -f ~/.zshrc ]; then
+		touch ~/.zshrc
+	fi
 
 	# Set the theme in .zshrc
 	sed -i.bak "s/^ZSH_THEME=.*/ZSH_THEME=\"$theme\"/" ~/.zshrc
