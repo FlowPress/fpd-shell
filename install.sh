@@ -59,15 +59,16 @@ source "$TEMP_DIR/print_success_message.sh"
 
 # Function to install Oh My Zsh and configure themes/plugins using zsh
 install_and_configure_oh_my_zsh() {
-  zsh <<'EOF'
-  source "$1/install_oh_my_zsh.sh"
-  install_oh_my_zsh
+    TEMP_DIR=$1
+  zsh <<EOF
+    source "$TEMP_DIR/install_oh_my_zsh.sh"
+    install_oh_my_zsh
 
-  source "$1/set_theme_and_plugins.sh"
-  set_oh_my_zsh_theme_and_plugins
+    source "$TEMP_DIR/set_theme_and_plugins.sh"
+    set_oh_my_zsh_theme_and_plugins
 
-  source "$1/print_success_message.sh"
-  print_success_message
+    source "$TEMP_DIR/print_success_message.sh"
+    print_success_message
 EOF
 }
 
@@ -95,9 +96,6 @@ case $action in
         fi
         
         # Clone the repository
-        
-        log_heading	"Installing FPD Shell..."
-        
         if [ -d ~/.fpd-shell ]; then
             echo "~/.fpd-shell already exists. Please remove it or choose another directory."
             read -p "Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): " remove_fpd_shell
