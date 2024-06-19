@@ -1,0 +1,41 @@
+name: Increment Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Increment version
+        id: version
+        run: |
+          # Read the current version
+          version=$(cat VERSION)
+          echo "Current version: $version"
+
+          # Increment the patch version
+          new_version=$(echo $version | awk -F. -v OFS=. '{$NF++;print}')
+          echo "New version: $new_version"
+
+          # Write the new version to the VERSION file
+          echo $new_version > VERSION
+
+          # Commit the new version
+          git add VERSION
+          git commit -m "Increment version to $new_version"
+          git tag "v$new_version"
+
+      - name: Push changes
+        run: |
+          git push origin main --tags
