@@ -27,14 +27,15 @@ set_oh_my_zsh_theme_and_plugins() {
 	esac
 
 	# Set the theme in .zshrc
-    if grep -q "^ZSH_THEME=" ~/.zshrc; then
-        sed -i.bak "s/^ZSH_THEME=.*/ZSH_THEME=\"$ZSH_THEME\"/" ~/.zshrc
-    else
-        echo "ZSH_THEME=\"$ZSH_THEME\"" >> ~/.zshrc
-    fi
+	if grep -q "^ZSH_THEME=" ~/.zshrc; then
+		sed -i.bak "s/^ZSH_THEME=.*/ZSH_THEME=\"$ZSH_THEME\"/" ~/.zshrc
+	else
+		echo "ZSH_THEME=\"$ZSH_THEME\"" >>~/.zshrc
+	fi
 
-	# Add plugins to .zshrc before sourcing oh-my-zsh
-	sed -i.bak '/^source $ZSH\/oh-my-zsh.sh/i plugins=(git zsh-autosuggestions zsh-syntax-highlighting)' ~/.zshrc
+	echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting)" >>~/.zshrc
 
 	echo "Theme set to $theme and plugins configured."
+
+	cat ~/.zshrc
 }
