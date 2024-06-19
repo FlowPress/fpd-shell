@@ -59,13 +59,13 @@ install_fpd_shell() {
 
 		# Run the Oh My Zsh installation in a zsh subshell
 		zsh -c "
-      source '$TEMP_DIR/install_oh_my_zsh.sh'
+      source '~/.fpd-shell/install_oh_my_zsh.sh'
       install_oh_my_zsh
 
-      source '$TEMP_DIR/set_theme_and_plugins.sh'
+      source '~/.fpd-shell/set_theme_and_plugins.sh'
       set_oh_my_zsh_theme_and_plugins
 
-      source '$TEMP_DIR/print_success_message.sh'
+      source '~/.fpd-shell/print_success_message.sh'
       print_success_message
     "
 	fi
