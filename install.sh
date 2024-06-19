@@ -2,8 +2,10 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-# Define the URL base for the utility scripts and version file
+# Define the URL base for the repository
 GITHUB_BASE_URL="https://raw.githubusercontent.com/FlowPress/fpd-shell/main"
+
+# Define the utility scripts to download
 UTIL_SCRIPTS=("install_oh_my_zsh.sh" "set_theme_and_plugins.sh" "uninstall_fpd_shell.sh" "print_success_message.sh")
 
 # Create a temporary directory to store the utility scripts
