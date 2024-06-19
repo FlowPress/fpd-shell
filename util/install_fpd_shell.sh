@@ -59,18 +59,11 @@ install_fpd_shell() {
 
 		# Run the Oh My Zsh installation in a zsh subshell
 		zsh -c "
-		cat ~/.fpd-shell/VERSION
-
       source ~/.fpd-shell/util/install_oh_my_zsh.sh
       install_oh_my_zsh
 
-	  cat ~/.fpd-shell/util/set_theme_and_plugins.sh
-
       source ~/.fpd-shell/util/set_theme_and_plugins.sh
       set_oh_my_zsh_theme_and_plugins
-
-      source ~/.fpd-shell/util/print_success_message.sh
-      print_success_message
     "
 	fi
 }
