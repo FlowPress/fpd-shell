@@ -50,3 +50,11 @@ log_heading(){
     printf "${heading}\n"
     printf "${border}\n\n"
 }
+
+# Function to check if in WordPress root directory
+check_if_in_wp_root() {
+	if [[ ! -f "wp-config.php" ]]; then
+		log_error "Not in a WordPress root directory"
+		exit 1
+	fi
+}
