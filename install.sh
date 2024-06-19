@@ -15,14 +15,14 @@ echo "Temporary directory created at $TEMP_DIR"
 
 # Function to download a file
 download_file() {
-    local url=$1
-    local dest=$2
-    echo "Downloading $url"
-    curl -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' -fsSL "$url?$(date +%s)" -o "$dest"
-    if [ ! -f "$dest" ]; then
-        echo "Failed to download $url"
-        exit 1
-    fi
+  local url=$1
+  local dest=$2
+  echo "Downloading $url"
+  curl -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' -fsSL "$url?$(date +%s)" -o "$dest"
+  if [ ! -f "$dest" ]; then
+    echo "Failed to download $url"
+    exit 1
+  fi
 }
 
 # Download the version file
@@ -32,9 +32,9 @@ echo "FPD Shell version: $VERSION"
 
 # Function to download utility scripts
 download_util_scripts() {
-    for script in "${UTIL_SCRIPTS[@]}"; do
-        download_file "$GITHUB_BASE_URL/util/$script" "$TEMP_DIR/$script"
-    done
+  for script in "${UTIL_SCRIPTS[@]}"; do
+    download_file "$GITHUB_BASE_URL/util/$script" "$TEMP_DIR/$script"
+  done
 }
 
 # Download the utility scripts
@@ -42,87 +42,66 @@ download_util_scripts
 
 # Check if utility scripts exist in the temporary directory
 for script in "${UTIL_SCRIPTS[@]}"; do
-    if [ -f "$TEMP_DIR/$script" ]; then
-        echo "$script downloaded successfully"
-    else
-        echo "$script failed to download"
-        exit 1
-    fi
+  if [ -f "$TEMP_DIR/$script" ]; then
+    echo "$script downloaded successfully"
+  else
+    echo "$script failed to download"
+    exit 1
+  fi
 done
-
-# Source the utility scripts
-echo "Sourcing utility scripts"
-source "$TEMP_DIR/install_oh_my_zsh.sh"
-echo "install_oh_my_zsh.sh sourced successfully"
-source "$TEMP_DIR/set_theme_and_plugins.sh"
-echo "set_theme_and_plugins.sh sourced successfully"
-source "$TEMP_DIR/uninstall_fpd_shell.sh"
-echo "uninstall_fpd_shell.sh sourced successfully"
-source "$TEMP_DIR/print_success_message.sh"
-echo "print_success_message.sh sourced successfully"
 
 # Prompt user for installation or uninstallation
 read "action?Do you want to install or uninstall FPD Shell? (i/u): "
 
 case $action in
-    i|install)
-        read "install_omz?Do you want to install Oh My Zsh? (y/n): "
-        if [[ "$install_omz" == "y" ]]; then
-            if [[ -d ~/.oh-my-zsh ]]; then
-                echo "The \$ZSH folder already exists ($HOME/.oh-my-zsh)."
-                read "remove_zsh?Do you want to remove it and reinstall Oh My Zsh? (y/n): "
-                if [[ "$remove_zsh" == "y" ]]; then
-                    rm -rf ~/.oh-my-zsh
-                    install_oh_my_zsh
-                else
-                    echo "Skipping Oh My Zsh installation."
-                fi
-            else
-                install_oh_my_zsh
-            fi
-            set_oh_my_zsh_theme_and_plugins
-            echo 'print_success_message' >> ~/.zshrc
-        else
-            print_success_message
+  i|install)
+    # Clone the repository
+    if [[ -d ~/.fpd-shell ]]; then
+      echo "~/.fpd-shell already exists. Please remove it or choose another directory."
+      read "remove_fpd_shell?Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): "
+      if [[ "$remove_fpd_shell" == "y" ]]; then
+        rm -rf ~/.fpd-shell
+      fi
+    fi
+    echo "Cloning the FPD Shell repository..."
+    git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
+    
+    # Source the main shell script in .zshrc
+    if [[ -f ~/.zshrc ]]; then
+      echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.zshrc
+      source ~/.zshrc
+    elif [[ -f ~/.bashrc ]]; then
+      echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.bashrc
+      source ~/.bashrc
+    else
+      # Default to creating .zshrc if neither exists
+      echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.zshrc
+      source ~/.zshrc
+    fi
+
+    # Install Oh My Zsh if user opts in
+    read "install_omz?Do you want to install Oh My Zsh? (y/n): "
+    if [[ "$install_omz" == "y" ]]; then
+      if [[ -d ~/.oh-my-zsh ]]; then
+        echo "The \$ZSH folder already exists ($HOME/.oh-my-zsh)."
+        read "remove_zsh?Do you want to remove it and reinstall Oh My Zsh? (y/n): "
+        if [[ "$remove_zsh" == "y" ]]; then
+          rm -rf ~/.oh-my-zsh
         fi
-        
-        # Clone the repository
-        if [[ -d ~/.fpd-shell ]]; then
-            echo "~/.fpd-shell already exists. Please remove it or choose another directory."
-            read "remove_fpd_shell?Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): "
-            if [[ "$remove_fpd_shell" == "y" ]]; then
-                rm -rf ~/.fpd-shell
-                echo "Cloning the FPD Shell repository..."
-                git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
-            else
-                echo "Skipping FPD Shell installation."
-            fi
-        else
-            echo "Cloning the FPD Shell repository..."
-            git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
-        fi
-        
-        # Source the main shell script in .zshrc
-        if [[ -f ~/.zshrc ]]; then
-            echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.zshrc
-            source ~/.zshrc
-            elif [[ -f ~/.bashrc ]]; then
-            echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.bashrc
-            source ~/.bashrc
-        else
-            # Default to creating .zshrc if neither exists
-            echo 'source ~/.fpd-shell/fpd-shell.sh' >> ~/.zshrc
-            source ~/.zshrc
-        fi
+      fi
+      source "$TEMP_DIR/install_oh_my_zsh.sh"
+      install_oh_my_zsh
+      set_oh_my_zsh_theme_and_plugins
+      echo 'print_success_message' >> ~/.zshrc
+    fi
     ;;
-    u|uninstall)
-        uninstall_fpd_shell
+  u|uninstall)
+    source "$TEMP_DIR/uninstall_fpd_shell.sh"
+    uninstall_fpd_shell
     ;;
-    *)
-        echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."
+  *)
+    echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."
     ;;
 esac
 
-# Clean up temporary directory
-echo "Cleaning up temporary directory"
-rm -rf "$TEMP_DIR"
+# Clean
