@@ -50,38 +50,42 @@ for script in "${UTIL_SCRIPTS[@]}"; do
 	fi
 done
 
-# Clone the repository first
-if [[ -d ~/.fpd-shell ]]; then
-	echo "~/.fpd-shell already exists. Please remove it or choose another directory."
-	read -p "Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): " remove_fpd_shell
-	if [[ "$remove_fpd_shell" == "y" ]]; then
-		rm -rf ~/.fpd-shell
-	fi
-fi
-echo "Cloning the FPD Shell repository..."
-git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
-
-# Source the .fpd-shellrc file from the cloned repository
-if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
-	echo "Sourcing .fpd-shellrc"
-	source ~/.fpd-shell/.fpd-shellrc
-else
-	echo "Error: .fpd-shellrc file not found in the cloned repository."
-	exit 1
-fi
-
-# Source the utility scripts
-echo "Sourcing utility scripts"
-source "$TEMP_DIR/install_oh_my_zsh.sh"
-source "$TEMP_DIR/set_theme_and_plugins.sh"
-source "$TEMP_DIR/uninstall_fpd_shell.sh"
-source "$TEMP_DIR/print_success_message.sh"
-
 # Prompt user for installation or uninstallation
 read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
 case $action in
 i | install)
+	# Check if the directory exists for installation
+	if [[ -d ~/.fpd-shell ]]; then
+		echo "~/.fpd-shell already exists. Please remove it or choose another directory."
+		read -p "Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): " remove_fpd_shell
+		if [[ "$remove_fpd_shell" == "y" ]]; then
+			rm -rf ~/.fpd-shell
+		else
+			echo "Installation aborted."
+			exit 1
+		fi
+	fi
+
+	echo "Cloning the FPD Shell repository..."
+	git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
+
+	# Source the .fpd-shellrc file from the cloned repository
+	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
+		echo "Sourcing .fpd-shellrc"
+		source ~/.fpd-shell/.fpd-shellrc
+	else
+		echo "Error: .fpd-shellrc file not found in the cloned repository."
+		exit 1
+	fi
+
+	# Source the utility scripts
+	echo "Sourcing utility scripts"
+	source "$TEMP_DIR/install_oh_my_zsh.sh"
+	source "$TEMP_DIR/set_theme_and_plugins.sh"
+	source "$TEMP_DIR/uninstall_fpd_shell.sh"
+	source "$TEMP_DIR/print_success_message.sh"
+
 	# Source the main shell script in .zshrc or .bashrc
 	if [[ -f ~/.zshrc ]]; then
 		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.zshrc
@@ -114,6 +118,18 @@ i | install)
 	fi
 	;;
 u | uninstall)
+	# Source the .fpd-shellrc file to ensure the uninstall script can run
+	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
+		echo "Sourcing .fpd-shellrc"
+		source ~/.fpd-shell/.fpd-shellrc
+	else
+		echo "Error: .fpd-shellrc file not found. Cannot proceed with uninstallation."
+		exit 1
+	fi
+
+	# Source the utility scripts
+	echo "Sourcing utility scripts"
+	source "$TEMP_DIR/uninstall_fpd_shell.sh"
 	uninstall_fpd_shell
 	;;
 *)
