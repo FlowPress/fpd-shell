@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Source the .fpd-shellrc file to get logging functions
+ls ~/
 source ~/.fpd-shellrc
 
 install_oh_my_zsh() {
