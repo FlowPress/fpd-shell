@@ -6,6 +6,8 @@ if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
 fi
 
 uninstall_fpd_shell() {
+	TEMP_DIR=$1
+
 	log_heading "Uninstalling FPD Shell..."
 
 	# Remove FPD Shell directory
@@ -17,10 +19,10 @@ uninstall_fpd_shell() {
 	# Uninstall Oh My Zsh if it is installed
 	if [[ -d ~/.oh-my-zsh ]]; then
 		echo "Uninstalling Oh My Zsh..."
-		zsh <<EOF
-      source "$TEMP_DIR/uninstall_oh_my_zsh.sh"
+		zsh -c "
+      source '$TEMP_DIR/uninstall_oh_my_zsh.sh'
       uninstall_oh_my_zsh
-EOF
+    "
 	fi
 
 	# Restore .zshrc from backup
