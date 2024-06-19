@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # FPD Shell Version
 FPD_SHELL_VERSION="1.0.0"

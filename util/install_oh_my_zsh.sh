@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 install_oh_my_zsh() {
     log_heading "Installing Oh My Zsh..."

@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/zsh
 
 print_success_message() {
-  echo "FPD Shell installed successfully!"
+    echo "FPD Shell installed successfully!"
 }

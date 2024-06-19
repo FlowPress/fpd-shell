@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 set_oh_my_zsh_theme_and_plugins() {
     echo "Select a theme for Oh My Zsh or type your custom theme:"

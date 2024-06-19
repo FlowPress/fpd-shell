@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 RED="\033[0;31m"
 REDBOLD="\033[1;31m"
 GREEN="\033[0;32m"
