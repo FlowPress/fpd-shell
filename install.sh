@@ -1,13 +1,29 @@
 #!/bin/bash
 
-# Resolve the directory of the current script
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Define the URL base for the utility scripts
+GITHUB_BASE_URL="https://raw.githubusercontent.com/FlowPress/fpd-shell/main/util"
 
-# Source utility functions
-source "$SCRIPT_DIR/util/install_oh_my_zsh.sh"
-source "$SCRIPT_DIR/util/set_theme_and_plugins.sh"
-source "$SCRIPT_DIR/util/uninstall_fpd_shell.sh"
-source "$SCRIPT_DIR/util/print_success_message.sh"
+# Define the utility scripts to download
+UTIL_SCRIPTS=("install_oh_my_zsh.sh" "set_theme_and_plugins.sh" "uninstall_fpd_shell.sh" "print_success_message.sh")
+
+# Create a temporary directory to store the utility scripts
+TEMP_DIR=$(mktemp -d)
+
+# Function to download utility scripts
+download_util_scripts() {
+    for script in "${UTIL_SCRIPTS[@]}"; do
+        curl -fsSL "$GITHUB_BASE_URL/$script" -o "$TEMP_DIR/$script"
+    done
+}
+
+# Download the utility scripts
+download_util_scripts
+
+# Source the utility scripts
+source "$TEMP_DIR/install_oh_my_zsh.sh"
+source "$TEMP_DIR/set_theme_and_plugins.sh"
+source "$TEMP_DIR/uninstall_fpd_shell.sh"
+source "$TEMP_DIR/print_success_message.sh"
 
 # Prompt user for installation or uninstallation
 read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
@@ -56,3 +72,6 @@ case $action in
         echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."
     ;;
 esac
+
+# Clean up temporary directory
+rm -rf "$TEMP_DIR"
