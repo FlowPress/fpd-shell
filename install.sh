@@ -130,7 +130,15 @@ u | uninstall)
 	# Source the utility scripts
 	echo "Sourcing utility scripts"
 	source "$TEMP_DIR/uninstall_fpd_shell.sh"
+
+	# Uninstall FPD Shell
 	uninstall_fpd_shell
+
+	# Uninstall Oh My Zsh if it is installed
+	if [[ -d ~/.oh-my-zsh ]]; then
+		echo "Uninstalling Oh My Zsh..."
+		uninstall_oh_my_zsh
+	fi
 	;;
 *)
 	echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."
