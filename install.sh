@@ -5,8 +5,8 @@ set -e # Exit immediately if a command exits with a non-zero status
 # Define the URL base for the repository
 GITHUB_BASE_URL="https://raw.githubusercontent.com/FlowPress/fpd-shell/main"
 
-# Define the utility scripts to download
-UTIL_SCRIPTS=("backup_restore_zshrc.sh" "install_fpd_shell.sh" "install_oh_my_zsh.sh" "uninstall_fpd_shell.sh" "uninstall_oh_my_zsh.sh" "print_success_message.sh")
+# Define the utility scripts to download initially
+INITIAL_UTIL_SCRIPTS=("backup_restore_zshrc.sh" "install_fpd_shell.sh")
 
 # Create a temporary directory to store the utility scripts
 TEMP_DIR=$(mktemp -d)
@@ -30,18 +30,18 @@ download_file "$GITHUB_BASE_URL/VERSION" "$TEMP_DIR/VERSION"
 VERSION=$(cat "$TEMP_DIR/VERSION")
 echo "FPD Shell version: $VERSION"
 
-# Function to download utility scripts
-download_util_scripts() {
-	for script in "${UTIL_SCRIPTS[@]}"; do
+# Function to download initial utility scripts
+download_initial_util_scripts() {
+	for script in "${INITIAL_UTIL_SCRIPTS[@]}"; do
 		download_file "$GITHUB_BASE_URL/util/$script" "$TEMP_DIR/$script"
 	done
 }
 
-# Download the utility scripts
-download_util_scripts
+# Download the initial utility scripts
+download_initial_util_scripts
 
-# Check if utility scripts exist in the temporary directory
-for script in "${UTIL_SCRIPTS[@]}"; do
+# Check if initial utility scripts exist in the temporary directory
+for script in "${INITIAL_UTIL_SCRIPTS[@]}"; do
 	if [ -f "$TEMP_DIR/$script" ]; then
 		echo "$script downloaded successfully"
 	else
@@ -50,8 +50,8 @@ for script in "${UTIL_SCRIPTS[@]}"; do
 	fi
 done
 
-# Source utility scripts
-for script in "${UTIL_SCRIPTS[@]}"; do
+# Source initial utility scripts
+for script in "${INITIAL_UTIL_SCRIPTS[@]}"; do
 	source "$TEMP_DIR/$script"
 done
 
@@ -60,10 +60,17 @@ read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
 case $action in
 i | install)
-	install_fpd_shell
+	install_fpd_shell "$TEMP_DIR"
 	;;
 u | uninstall)
-	uninstall_fpd_shell
+	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
+		source ~/.fpd-shell/.fpd-shellrc
+		source ~/.fpd-shell/util/uninstall_fpd_shell.sh
+		uninstall_fpd_shell
+	else
+		echo "Error: .fpd-shellrc file not found. Cannot proceed with uninstallation."
+		exit 1
+	fi
 	;;
 *)
 	echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."

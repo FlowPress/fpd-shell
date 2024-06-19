@@ -1,6 +1,8 @@
 #!/bin/bash
 
 install_fpd_shell() {
+	TEMP_DIR=$1
+
 	# Check if the directory exists for installation
 	if [[ -d ~/.fpd-shell ]]; then
 		echo "~/.fpd-shell already exists. Please remove it or choose another directory."
@@ -16,7 +18,7 @@ install_fpd_shell() {
 	echo "Cloning the FPD Shell repository..."
 	git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
 
-	# Source the .fpd-shellrc file from the cloned repository
+	# Ensure the .fpd-shellrc file is sourced correctly
 	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
 		echo "Sourcing .fpd-shellrc"
 		source ~/.fpd-shell/.fpd-shellrc
