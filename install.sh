@@ -3,10 +3,8 @@
 # Function to install Oh My Zsh
 install_oh_my_zsh() {
   echo "Installing Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  
-  # Install zsh-autosuggestions and zsh-syntax-highlighting plugins
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
   git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 }
 
@@ -108,7 +106,7 @@ case $action in
 
     # Clone the repository
     echo "Cloning the FPD Shell repository..."
-    git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
+    git -c http.sslVerify=false clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
 
     # Source the main shell script in .bashrc or .zshrc
     if [ -f ~/.zshrc ]; then
