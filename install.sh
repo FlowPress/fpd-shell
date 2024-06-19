@@ -82,17 +82,20 @@ read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
 case $action in
 i | install)
-	# Source the main shell script in .bashrc or .bash_profile
-	if [[ -f ~/.bashrc ]]; then
+	# Source the main shell script in .zshrc or .bashrc
+	if [[ -f ~/.zshrc ]]; then
+		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.zshrc
+		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.zshrc
+		source ~/.zshrc
+	elif [[ -f ~/.bashrc ]]; then
 		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.bashrc
+		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.bashrc
 		source ~/.bashrc
-	elif [[ -f ~/.bash_profile ]]; then
-		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.bash_profile
-		source ~/.bash_profile
 	else
-		# Default to creating .bashrc if neither exists
-		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.bashrc
-		source ~/.bashrc
+		# Default to creating .zshrc if neither exists
+		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.zshrc
+		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.zshrc
+		source ~/.zshrc
 	fi
 
 	# Install Oh My Zsh if user opts in
@@ -107,6 +110,7 @@ i | install)
 		fi
 		install_oh_my_zsh
 		set_oh_my_zsh_theme_and_plugins
+		source ~/.zshrc
 	fi
 	;;
 u | uninstall)
