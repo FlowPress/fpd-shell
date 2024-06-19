@@ -53,9 +53,13 @@ done
 # Source the utility scripts
 echo "Sourcing utility scripts"
 source "$TEMP_DIR/install_oh_my_zsh.sh"
+echo "install_oh_my_zsh.sh sourced successfully"
 source "$TEMP_DIR/set_theme_and_plugins.sh"
+echo "set_theme_and_plugins.sh sourced successfully"
 source "$TEMP_DIR/uninstall_fpd_shell.sh"
+echo "uninstall_fpd_shell.sh sourced successfully"
 source "$TEMP_DIR/print_success_message.sh"
+echo "print_success_message.sh sourced successfully"
 
 # Prompt user for installation or uninstallation
 read "action?Do you want to install or uninstall FPD Shell? (i/u): "
