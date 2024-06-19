@@ -57,6 +57,20 @@ source "$TEMP_DIR/set_theme_and_plugins.sh"
 source "$TEMP_DIR/uninstall_fpd_shell.sh"
 source "$TEMP_DIR/print_success_message.sh"
 
+# Function to install Oh My Zsh and configure themes/plugins using zsh
+install_and_configure_oh_my_zsh() {
+  zsh <<'EOF'
+  source "$1/install_oh_my_zsh.sh"
+  install_oh_my_zsh
+
+  source "$1/set_theme_and_plugins.sh"
+  set_oh_my_zsh_theme_and_plugins
+
+  source "$1/print_success_message.sh"
+  print_success_message
+EOF
+}
+
 # Prompt user for installation or uninstallation
 read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
@@ -69,15 +83,13 @@ case $action in
                 read -p "Do you want to remove it and reinstall Oh My Zsh? (y/n): " remove_zsh
                 if [ "$remove_zsh" == "y" ]; then
                     rm -rf ~/.oh-my-zsh
-                    install_oh_my_zsh
+                    install_and_configure_oh_my_zsh "$TEMP_DIR"
                 else
                     echo "Skipping Oh My Zsh installation."
                 fi
             else
-                install_oh_my_zsh
+                install_and_configure_oh_my_zsh "$TEMP_DIR"
             fi
-            set_oh_my_zsh_theme_and_plugins
-            echo 'print_success_message' >> ~/.zshrc
         else
             print_success_message
         fi
