@@ -112,9 +112,19 @@ i | install)
 				rm -rf ~/.oh-my-zsh
 			fi
 		fi
-		install_oh_my_zsh
-		set_oh_my_zsh_theme_and_plugins
-		source ~/.zshrc
+
+		# Run the Oh My Zsh installation in a zsh subshell
+		zsh <<EOF
+        source "$TEMP_DIR/install_oh_my_zsh.sh"
+        install_oh_my_zsh
+
+        source "$TEMP_DIR/set_theme_and_plugins.sh"
+        set_oh_my_zsh_theme_and_plugins
+
+        source "$TEMP_DIR/print_success_message.sh"
+        print_success_message
+EOF
+
 	fi
 	;;
 u | uninstall)
@@ -137,7 +147,10 @@ u | uninstall)
 	# Uninstall Oh My Zsh if it is installed
 	if [[ -d ~/.oh-my-zsh ]]; then
 		echo "Uninstalling Oh My Zsh..."
-		uninstall_oh_my_zsh
+		zsh <<EOF
+        source "$TEMP_DIR/uninstall_fpd_shell.sh"
+        uninstall_oh_my_zsh
+EOF
 	fi
 	;;
 *)
