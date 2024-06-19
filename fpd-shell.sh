@@ -9,11 +9,11 @@ function show_version() {
 }
 
 function show_help() {
-  echo "FPD Shell Commands:"
-  echo "Functions:"
-  grep -oP 'function \K\w+' ~/.fpd-shell/.fpd-shellrc
-  echo "Scripts:"
-  ls ~/.fpd-shell/scripts
+    echo "FPD Shell Commands:"
+    echo "Functions:"
+    grep -oP 'function \K\w+' ~/.fpd-shell/.fpd-shellrc
+    echo "Scripts:"
+    ls ~/.fpd-shell/scripts
 }
 
 

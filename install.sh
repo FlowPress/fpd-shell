@@ -95,6 +95,9 @@ case $action in
         fi
         
         # Clone the repository
+        
+        log_heading	"Installing FPD Shell..."
+        
         if [ -d ~/.fpd-shell ]; then
             echo "~/.fpd-shell already exists. Please remove it or choose another directory."
             read -p "Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): " remove_fpd_shell
