@@ -6,7 +6,7 @@ set -e # Exit immediately if a command exits with a non-zero status
 GITHUB_BASE_URL="https://raw.githubusercontent.com/FlowPress/fpd-shell/main"
 
 # Define the utility scripts to download
-UTIL_SCRIPTS=("install_oh_my_zsh.sh" "set_theme_and_plugins.sh" "uninstall_fpd_shell.sh" "print_success_message.sh")
+UTIL_SCRIPTS=("backup_restore_zshrc.sh" "install_fpd_shell.sh" "install_oh_my_zsh.sh" "uninstall_fpd_shell.sh" "uninstall_oh_my_zsh.sh" "print_success_message.sh")
 
 # Create a temporary directory to store the utility scripts
 TEMP_DIR=$(mktemp -d)
@@ -50,130 +50,20 @@ for script in "${UTIL_SCRIPTS[@]}"; do
 	fi
 done
 
-# Backup .zshrc if it doesn't already exist
-backup_zshrc() {
-	if [[ -f ~/.zshrc && ! -f ~/.zshrc.fpd.backup ]]; then
-		cp ~/.zshrc ~/.zshrc.fpd.backup
-		echo "Backup of .zshrc created as .zshrc.fpd.backup"
-	fi
-}
-
-# Restore .zshrc from backup
-restore_zshrc() {
-	if [[ -f ~/.zshrc.fpd.backup ]]; then
-		cp ~/.zshrc.fpd.backup ~/.zshrc
-		echo "Restored .zshrc from .zshrc.fpd.backup"
-	fi
-}
+# Source utility scripts
+for script in "${UTIL_SCRIPTS[@]}"; do
+	source "$TEMP_DIR/$script"
+done
 
 # Prompt user for installation or uninstallation
 read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
 case $action in
 i | install)
-	# Check if the directory exists for installation
-	if [[ -d ~/.fpd-shell ]]; then
-		echo "~/.fpd-shell already exists. Please remove it or choose another directory."
-		read -p "Do you want to remove ~/.fpd-shell and proceed with the installation? (y/n): " remove_fpd_shell
-		if [[ "$remove_fpd_shell" == "y" ]]; then
-			rm -rf ~/.fpd-shell
-		else
-			echo "Installation aborted."
-			exit 1
-		fi
-	fi
-
-	echo "Cloning the FPD Shell repository..."
-	git clone https://github.com/FlowPress/fpd-shell.git ~/.fpd-shell
-
-	# Source the .fpd-shellrc file from the cloned repository
-	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
-		echo "Sourcing .fpd-shellrc"
-		source ~/.fpd-shell/.fpd-shellrc
-	else
-		echo "Error: .fpd-shellrc file not found in the cloned repository."
-		exit 1
-	fi
-
-	# Backup .zshrc
-	backup_zshrc
-
-	# Source the utility scripts
-	echo "Sourcing utility scripts"
-	source "$TEMP_DIR/install_oh_my_zsh.sh"
-	source "$TEMP_DIR/set_theme_and_plugins.sh"
-	source "$TEMP_DIR/uninstall_fpd_shell.sh"
-	source "$TEMP_DIR/print_success_message.sh"
-
-	# Source the main shell script in .zshrc or .bashrc
-	if [[ -f ~/.zshrc ]]; then
-		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.zshrc
-		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.zshrc
-		source ~/.zshrc
-	elif [[ -f ~/.bashrc ]]; then
-		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.bashrc
-		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.bashrc
-		source ~/.bashrc
-	else
-		# Default to creating .zshrc if neither exists
-		echo 'source ~/.fpd-shell/fpd-shell.sh' >>~/.zshrc
-		echo 'source ~/.fpd-shell/.fpd-shellrc' >>~/.zshrc
-		source ~/.zshrc
-	fi
-
-	# Install Oh My Zsh if user opts in
-	read -p "Do you want to install Oh My Zsh? (y/n): " install_omz
-	if [[ "$install_omz" == "y" ]]; then
-		if [[ -d ~/.oh-my-zsh ]]; then
-			echo "The \$ZSH folder already exists ($HOME/.oh-my-zsh)."
-			read -p "Do you want to remove it and reinstall Oh My Zsh? (y/n): " remove_zsh
-			if [[ "$remove_zsh" == "y" ]]; then
-				rm -rf ~/.oh-my-zsh
-			fi
-		fi
-
-		# Run the Oh My Zsh installation in a zsh subshell
-		zsh <<EOF
-        source "$TEMP_DIR/install_oh_my_zsh.sh"
-        install_oh_my_zsh
-
-        source "$TEMP_DIR/set_theme_and_plugins.sh"
-        set_oh_my_zsh_theme_and_plugins
-
-        source "$TEMP_DIR/print_success_message.sh"
-        print_success_message
-EOF
-
-	fi
+	install_fpd_shell
 	;;
 u | uninstall)
-	# Source the .fpd-shellrc file to ensure the uninstall script can run
-	if [[ -f ~/.fpd-shell/.fpd-shellrc ]]; then
-		echo "Sourcing .fpd-shellrc"
-		source ~/.fpd-shell/.fpd-shellrc
-	else
-		echo "Error: .fpd-shellrc file not found. Cannot proceed with uninstallation."
-		exit 1
-	fi
-
-	# Source the utility scripts
-	echo "Sourcing utility scripts"
-	source "$TEMP_DIR/uninstall_fpd_shell.sh"
-
-	# Uninstall FPD Shell
 	uninstall_fpd_shell
-
-	# Uninstall Oh My Zsh if it is installed
-	if [[ -d ~/.oh-my-zsh ]]; then
-		echo "Uninstalling Oh My Zsh..."
-		zsh <<EOF
-        source "$TEMP_DIR/uninstall_fpd_shell.sh"
-        uninstall_oh_my_zsh
-EOF
-	fi
-
-	# Restore .zshrc from backup
-	restore_zshrc
 	;;
 *)
 	echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."

@@ -13,12 +13,16 @@ uninstall_fpd_shell() {
 		rm -rf ~/.fpd-shell
 		log_success "FPD Shell directory removed."
 	fi
-}
 
-# Function to uninstall Oh My Zsh
-uninstall_oh_my_zsh() {
+	# Uninstall Oh My Zsh if it is installed
 	if [[ -d ~/.oh-my-zsh ]]; then
-		sh ~/.oh-my-zsh/tools/uninstall.sh --unattended
-		log_success "Oh My Zsh uninstalled."
+		echo "Uninstalling Oh My Zsh..."
+		zsh <<EOF
+      source "$TEMP_DIR/uninstall_oh_my_zsh.sh"
+      uninstall_oh_my_zsh
+EOF
 	fi
+
+	# Restore .zshrc from backup
+	restore_zshrc
 }
