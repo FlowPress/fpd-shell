@@ -50,6 +50,22 @@ for script in "${UTIL_SCRIPTS[@]}"; do
 	fi
 done
 
+# Backup .zshrc if it doesn't already exist
+backup_zshrc() {
+	if [[ -f ~/.zshrc && ! -f ~/.zshrc.fpd.backup ]]; then
+		cp ~/.zshrc ~/.zshrc.fpd.backup
+		echo "Backup of .zshrc created as .zshrc.fpd.backup"
+	fi
+}
+
+# Restore .zshrc from backup
+restore_zshrc() {
+	if [[ -f ~/.zshrc.fpd.backup ]]; then
+		cp ~/.zshrc.fpd.backup ~/.zshrc
+		echo "Restored .zshrc from .zshrc.fpd.backup"
+	fi
+}
+
 # Prompt user for installation or uninstallation
 read -p "Do you want to install or uninstall FPD Shell? (i/u): " action
 
@@ -78,6 +94,9 @@ i | install)
 		echo "Error: .fpd-shellrc file not found in the cloned repository."
 		exit 1
 	fi
+
+	# Backup .zshrc
+	backup_zshrc
 
 	# Source the utility scripts
 	echo "Sourcing utility scripts"
@@ -152,6 +171,9 @@ u | uninstall)
         uninstall_oh_my_zsh
 EOF
 	fi
+
+	# Restore .zshrc from backup
+	restore_zshrc
 	;;
 *)
 	echo "Invalid option. Please choose 'i' for install or 'u' for uninstall."
