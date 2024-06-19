@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status
+set -x  # Print commands and their arguments as they are executed
+
 # Define the URL base for the utility scripts
 GITHUB_BASE_URL="https://raw.githubusercontent.com/FlowPress/fpd-shell/main/util"
 
@@ -9,17 +12,35 @@ UTIL_SCRIPTS=("install_oh_my_zsh.sh" "set_theme_and_plugins.sh" "uninstall_fpd_s
 # Create a temporary directory to store the utility scripts
 TEMP_DIR=$(mktemp -d)
 
+echo "Temporary directory created at $TEMP_DIR"
+
 # Function to download utility scripts
 download_util_scripts() {
     for script in "${UTIL_SCRIPTS[@]}"; do
+        echo "Downloading $script"
         curl -fsSL "$GITHUB_BASE_URL/$script" -o "$TEMP_DIR/$script"
+        if [ ! -f "$TEMP_DIR/$script" ]; then
+            echo "Failed to download $script"
+            exit 1
+        fi
     done
 }
 
 # Download the utility scripts
 download_util_scripts
 
+# Check if utility scripts exist in the temporary directory
+for script in "${UTIL_SCRIPTS[@]}"; do
+    if [ -f "$TEMP_DIR/$script" ]; then
+        echo "$script downloaded successfully"
+    else
+        echo "$script failed to download"
+        exit 1
+    fi
+done
+
 # Source the utility scripts
+echo "Sourcing utility scripts"
 source "$TEMP_DIR/install_oh_my_zsh.sh"
 source "$TEMP_DIR/set_theme_and_plugins.sh"
 source "$TEMP_DIR/uninstall_fpd_shell.sh"
@@ -74,4 +95,5 @@ case $action in
 esac
 
 # Clean up temporary directory
+echo "Cleaning up temporary directory"
 rm -rf "$TEMP_DIR"
