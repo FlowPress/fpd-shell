@@ -7,28 +7,26 @@ set_oh_my_zsh_theme_and_plugins() {
 	fi
 
 	echo "Select a theme for Oh My Zsh:"
-  echo "1) robbyrussell"
-  echo "2) agnoster"
-  echo "3) gallois"
-  echo "4) avit"
-  echo "5) random"
-  read -p "Enter the number corresponding to your choice: " theme_choice
+	echo "1) robbyrussell"
+	echo "2) agnoster"
+	echo "3) gallois"
+	echo "4) avit"
+	echo "5) random"
+	read -p "Enter the number corresponding to your choice: " theme_choice
 
-  case $theme_choice in
-    1) ZSH_THEME="robbyrussell";;
-    2) ZSH_THEME="agnoster";;
-    3) ZSH_THEME="gallois";;
-    4) ZSH_THEME="avit";;
-    5) ZSH_THEME="random";;
-    *) echo "Invalid choice, defaulting to robbyrussell"; ZSH_THEME="robbyrussell";;
-  esac
+	case $theme_choice in
+	1) ZSH_THEME="robbyrussell" ;;
+	2) ZSH_THEME="agnoster" ;;
+	3) ZSH_THEME="gallois" ;;
+	4) ZSH_THEME="avit" ;;
+	5) ZSH_THEME="random" ;;
+	*)
+		echo "Invalid choice, defaulting to robbyrussell"
+		ZSH_THEME="robbyrussell"
+		;;
+	esac
 
-  # Set the theme in .zshrc
-	if grep -q "^ZSH_THEME=" ~/.zshrc; then
-		sed -i.bak "s/^ZSH_THEME=.*/ZSH_THEME=\"$ZSH_THEME\"/" ~/.zshrc
-	else
-		echo "ZSH_THEME=\"$ZSH_THEME\"" >>~/.zshrc
-	fi
+	echo "ZSH_THEME=\"$ZSH_THEME\"" >>~/.zshrc
 
 	echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting)" >>~/.zshrc
 
