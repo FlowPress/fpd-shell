@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 RED="\033[0;31m"
 REDBOLD="\033[1;31m"

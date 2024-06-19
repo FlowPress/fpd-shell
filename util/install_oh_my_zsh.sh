@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Source the .fpd-shellrc file to get logging functions
 source ~/.fpd-shellrc

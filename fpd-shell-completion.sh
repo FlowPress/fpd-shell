@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Autocompletion function
 _fpd_shell_autocomplete() {

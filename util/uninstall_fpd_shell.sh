@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 uninstall_fpd_shell() {
     echo "Uninstalling FPD Shell and Oh My Zsh..."
