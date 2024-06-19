@@ -8,8 +8,8 @@ set_oh_my_zsh_theme_and_plugins() {
 	echo "4) avit"
 	echo "5) random"
 	echo "6) Custom theme"
-
-	read theme_choice?"Enter the number corresponding to your choice or type your theme name: "
+	echo -n "Enter the number corresponding to your choice or type your theme name: "
+	read theme_choice
 
 	case $theme_choice in
 	1)
@@ -28,7 +28,8 @@ set_oh_my_zsh_theme_and_plugins() {
 		theme="random"
 		;;
 	6)
-		read custom_theme?"Enter your custom theme name: "
+		echo -n "Enter your custom theme name: "
+		read custom_theme
 		theme="$custom_theme"
 		;;
 	*)
