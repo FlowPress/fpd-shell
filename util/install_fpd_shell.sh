@@ -66,4 +66,21 @@ install_fpd_shell() {
       set_oh_my_zsh_theme_and_plugins
     "
 	fi
+
+	# Add cron job to update FPD Shell daily
+	crontab -l > mycron
+	if ! grep -q "~/.fpd-shell/update.sh" mycron; then
+		echo "0 0 * * * ~/.fpd-shell/update.sh" >> mycron
+		crontab mycron || echo "Could not update crontab. Please add the following line to your crontab manually:
+0 0 * * * ~/.fpd-shell/update.sh"
+	fi
+	rm mycron
+
+
 }
+
+
+# Add cron job to update FPD Shell daily
+(crontab -l ; echo "0 0 * * * ~/.fpd-shell/update.sh") | crontab -
+
+echo "FPD Shell installed and daily update scheduled!"
