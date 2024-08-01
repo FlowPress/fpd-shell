@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PATH="$HOME/.fpd-shell:$PATH"
+export PATH="$HOME/.fpd-shell/scripts:$PATH"
+
 RED="\033[0;31m"
 REDBOLD="\033[1;31m"
 GREEN="\033[0;32m"
