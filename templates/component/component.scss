@@ -1,0 +1,23 @@
+@layer components {
+
+    .{{COMPONENT_TAG}} {
+      @apply block shadow-2xl rounded-lg p-4 bg-white;
+    }
+  
+    .{{COMPONENT_TAG}}__header {
+      @apply text-2xl font-bold mb-4;
+    }
+  
+    .{{COMPONENT_TAG}}__body {
+      @apply mb-4;
+    }
+  
+    .{{COMPONENT_TAG}}__footer {
+      @apply text-right;
+  
+      .{{COMPONENT_TAG}}__button {
+        @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700;
+      }
+    }
+  }
+  

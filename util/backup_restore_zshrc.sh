@@ -5,6 +5,7 @@ backup_zshrc() {
 	if [[ -f ~/.zshrc && ! -f ~/.zshrc.fpd.backup ]]; then
 		cp ~/.zshrc ~/.zshrc.fpd.backup
 		echo "Backup of .zshrc created as .zshrc.fpd.backup"
+		rm -fr ~/.zshrc
 	fi
 }
 

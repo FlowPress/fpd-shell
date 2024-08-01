@@ -16,45 +16,52 @@ WHITE="\033[0;37m"
 WHITEBOLD="\033[1;37m"
 NC='\033[0m' # No Color
 
-log(){
-    if [[ $2 ]]; then
-        printf "\n$1 ${CYAN} $2 ${NC}\n"
-    else
-        printf "\n$1\n"
-    fi
+log() {
+	if [[ $2 ]]; then
+		printf "\n$1 ${CYAN} $2 ${NC}\n"
+	else
+		printf "\n$1\n"
+	fi
 }
 
-log_warn(){
-    msg="${YELLOWBOLD}${1}${NC}"
-    log "$msg"
+log_warn() {
+	msg="${YELLOWBOLD}${1}${NC}"
+	log "$msg"
 }
 
-log_error(){
-    msg="${REDBOLD}${1}${NC}"
-    log "$msg"
+log_error() {
+	msg="${REDBOLD}${1}${NC}"
+	log "$msg"
 }
 
-log_success(){
-    if [[ $2 ]]; then
-        msg="${GREEN}${1}${NC}${GREENBOLD}${2}${NC}"
-    else
-        msg="${GREEN}${1}${NC}"
-    fi
-    log "$msg"
+log_success() {
+	if [[ $2 ]]; then
+		msg="${GREEN}${1}${NC}${GREENBOLD}${2}${NC}"
+	else
+		msg="${GREEN}${1}${NC}"
+	fi
+	log "$msg"
 }
 
-log_heading(){
-    local border="========================================="
-    local heading="${PURPLEBOLD}$1${NC}"
-    printf "\n${border}\n"
-    printf "${heading}\n"
-    printf "${border}\n\n"
+log_heading() {
+	local border="========================================="
+	local heading="${PURPLEBOLD}$1${NC}"
+	printf "\n${border}\n"
+	printf "${heading}\n"
+	printf "${border}\n\n"
 }
 
 # Function to check if in WordPress root directory
 check_if_in_wp_root() {
 	if [[ ! -f "wp-config.php" ]]; then
 		log_error "Not in a WordPress root directory"
+		exit 1
+	fi
+}
+
+check_if_in_theme_root() {
+	if [[ ! -f "style.css" ]]; then
+		log_error "Not in a WordPress theme root directory"
 		exit 1
 	fi
 }
